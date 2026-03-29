@@ -50,6 +50,16 @@ class PaperclipClient
     }
 
     /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function fetchProjects(): array
+    {
+        $response = $this->http->get("/api/companies/{$this->companyId}/projects");
+
+        return json_decode($response->getBody()->getContents(), true);
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function fetchCostsByProject(): array

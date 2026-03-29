@@ -19,10 +19,16 @@ class BillingReportGenerator
     {
         $issues = $this->client->fetchIssues($status);
         $agents = $this->client->fetchAgents();
+        $projects = $this->client->fetchProjects();
 
         $agentMap = [];
         foreach ($agents as $agent) {
             $agentMap[$agent['id']] = $agent['name'] ?? 'Unknown';
+        }
+
+        $projectMap = [];
+        foreach ($projects as $project) {
+            $projectMap[$project['id']] = $project['name'] ?? $project['id'];
         }
 
         // Filter to issues with startedAt
@@ -42,8 +48,8 @@ class BillingReportGenerator
             $billingCode = $billingCode === 'none' ? null : $billingCode;
 
             $projectName = null;
-            if ($projectId !== null && isset($group[0]['project']['name'])) {
-                $projectName = $group[0]['project']['name'];
+            if ($projectId !== null) {
+                $projectName = $projectMap[$projectId] ?? $group[0]['project']['name'] ?? null;
             }
 
             // Agent breakdown
